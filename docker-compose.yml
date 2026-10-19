@@ -21,6 +21,7 @@ services:
       WG_DB_NAME: ${WG_DB_NAME:-mediawiki}
       WG_DB_USER: ${WG_DB_USER:-root}
       WG_DB_PASSWORD: ${WG_DB_PASSWORD:-root}
+      WG_MEMCACHED_SERVER: ${WG_MEMCACHED_SERVER:-memcached:11211}
       WG_SMTP_HOST: ${WG_SMTP_HOST:-mailhog}
       WG_SMTP_IDHOST: ${WG_SMTP_IDHOST:-mailhog}
       WG_SMTP_LOCALHOST: ${WG_SMTP_LOCALHOST:-}
