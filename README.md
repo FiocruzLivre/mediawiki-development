@@ -21,7 +21,7 @@ See [the upgrade guide](docs/UPGRADING.md) before upgrading an existing wiki. Ch
      https://gerrit.wikimedia.org/r/mediawiki/core.git volumes/mediawiki
    ```
 
-3. Place the chosen wiki's configuration into `volumes/src/mediawiki`; the shared [FiocruzLivre/mediawiki-settings](https://github.com/FiocruzLivre/mediawiki-settings) repository is a reference. The entrypoint links overrides from that location. Review `LocalSettings.php` and its extensions before launching.
+3. Place the chosen wiki's configuration into `volumes/src/mediawiki`. For **Mapa Mov Saúde**, the application settings are maintained in [LibreCodeCoop/mapa-colaborativo](https://github.com/LibreCodeCoop/mapa-colaborativo); for **WikiFavelas**, use [FiocruzLivre/mediawiki-settings](https://github.com/FiocruzLivre/mediawiki-settings). These application repositories are distinct from this shared Docker setup. The entrypoint links overrides from `volumes/src/mediawiki`; review the settings and extensions before launching.
 4. Build and start the development services:
 
    ```bash

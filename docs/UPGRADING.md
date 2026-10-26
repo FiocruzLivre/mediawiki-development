@@ -1,6 +1,6 @@
 # Upgrade an existing MediaWiki deployment
 
-This is an operator checklist for both Mapa Mov Saúde and WikiFavelas. The shared Docker setup cannot safely upgrade an existing wiki by changing the container tag alone.
+This is an operator checklist for both Mapa Mov Saúde and WikiFavelas. The shared Docker setup cannot safely upgrade an existing wiki by changing the container tag alone. **Use the correct application configuration repository:** [LibreCodeCoop/mapa-colaborativo](https://github.com/LibreCodeCoop/mapa-colaborativo) for Mapa Mov Saúde and [FiocruzLivre/mediawiki-settings](https://github.com/FiocruzLivre/mediawiki-settings) for WikiFavelas. Do not mix their extension inventories.
 
 ## 1. Capture inventory and a recoverable baseline
 
