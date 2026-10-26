@@ -1,25 +1,21 @@
-ARG MEDIAWIKI_VERSION
+ARG MEDIAWIKI_VERSION=1.46.2
 FROM mediawiki:${MEDIAWIKI_VERSION}
 
-RUN apt-get update && apt-get install -y \
-    rsync
+ARG ENABLE_XDEBUG=0
 
-# Install PHP extensions
-ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
-RUN chmod uga+x /usr/local/bin/install-php-extensions && sync \
-    && install-php-extensions \
-    @composer \
-    gd \
-    memcache \
-    memcached \
-    xdebug \
-    && rm /usr/local/bin/install-php-extensions \
-    # pevent errors when try to create files at /var/www with user www-data
-    && chown -R www-data /var/www
+# Use a versioned installer instead of downloading a mutable "latest" script.
+COPY --from=ghcr.io/mlocati/php-extension-installer:2.12.3 /usr/bin/install-php-extensions /usr/local/bin/
 
-COPY scripts/* /var/www/scripts/
-COPY config/php/* /usr/local/etc/php/conf.d/
+RUN set -eux; \
+    apt-get update; \
+    apt-get install -y --no-install-recommends rsync; \
+    rm -rf /var/lib/apt/lists/*; \
+    install-php-extensions @composer gd memcached; \
+    if [ "$ENABLE_XDEBUG" = "1" ]; then install-php-extensions xdebug; fi; \
+    rm -f /usr/local/bin/install-php-extensions
+
+COPY scripts/ /var/www/scripts/
+COPY config/php/ /usr/local/etc/php/conf.d/
 
 WORKDIR /var/www/mediawiki
-
-ENTRYPOINT [ "bash", "/var/www/scripts/entrypoint.sh" ]
+ENTRYPOINT ["bash", "/var/www/scripts/entrypoint.sh"]

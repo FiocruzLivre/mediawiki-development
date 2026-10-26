@@ -1,0 +1,39 @@
+name: Validate MediaWiki development image
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  compose:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - name: Install Bats and jq
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y bats jq
+      - name: Validate Compose behavior
+        run: bats test/compose.bats
+
+  image:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - name: Build supported MediaWiki image
+        env:
+          WG_SECRET_KEY: test-not-a-real-secret
+          WG_UPGRADE_KEY: test-not-a-real-secret
+        run: docker compose build mediawiki
+      - name: Check patched PHP and required runtime extensions
+        env:
+          WG_SECRET_KEY: test-not-a-real-secret
+          WG_UPGRADE_KEY: test-not-a-real-secret
+        run: |
+          docker compose run --rm --no-deps --entrypoint php mediawiki -r 'exit(version_compare(PHP_VERSION, "8.3.36", ">=") ? 0 : 1);'
+          docker compose run --rm --no-deps --entrypoint php mediawiki -m | grep -Fx 'memcached'

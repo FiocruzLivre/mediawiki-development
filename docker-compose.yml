@@ -3,14 +3,16 @@ services:
     build:
       context: .docker/mediawiki
       args:
-        MEDIAWIKI_VERSION: ${MEDIAWIKI_VERSION:-1.41.0}
+        MEDIAWIKI_VERSION: ${MEDIAWIKI_VERSION:-1.46.2}
+        ENABLE_XDEBUG: ${ENABLE_XDEBUG:-0}
     restart: unless-stopped
     ports:
-      - ${HTTP_PORT:-80}:80
+      - "${HTTP_BIND_IP:-127.0.0.1}:${HTTP_PORT:-80}:80"
     environment:
       HOST_UID: ${HOST_UID:-1000}
       HOST_GID: ${HOST_GID:-1000}
-      XDEBUG_CONFIG: ${XDEBUG_CONFIG:-client_host=172.17.0.1 client_port=9003 start_with_request=yes}
+      XDEBUG_MODE: ${XDEBUG_MODE:-off}
+      XDEBUG_CONFIG: ${XDEBUG_CONFIG:-client_host=host.docker.internal client_port=9003}
       TZ: ${TZ:-CET}
       WG_SERVER: ${WG_SERVER:-http://localhost}
       WG_SECRET_KEY: ${WG_SECRET_KEY}
@@ -34,10 +36,10 @@ services:
       - ~/.composer:/var/www/.composer/
       - ./volumes/src:/var/www/src
   database:
-    image: mariadb:${MARIADB_VERSION:-11.3.2}
+    image: mariadb:${MARIADB_VERSION:-11.8.6}
     restart: unless-stopped
     ports:
-      - ${MYSQL_PORT:-3306}:3306
+      - "${MYSQL_BIND_IP:-127.0.0.1}:${MYSQL_PORT:-3306}:3306"
     environment:
       MYSQL_DATABASE: ${MYSQL_DATABASE:-mediawiki}
       MYSQL_USER: ${MYSQL_USER:-wikiuser}
@@ -54,4 +56,4 @@ services:
   mailhog:
     image: blueimp/mailhog
     ports:
-      - ${MAILHOG_PORT:-8025}:8025
+      - "${MAILHOG_BIND_IP:-127.0.0.1}:${MAILHOG_PORT:-8025}:8025"
