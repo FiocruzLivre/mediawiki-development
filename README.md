@@ -1,51 +1,29 @@
 # MediaWiki development environment
 
-Shared Docker development setup for MediaWiki deployments, including Mapa dos Movimentos Sociais em Saúde and WikiFavelas. Configuration, extensions, and application data belong to each wiki; they are **not** included in this repository.
+A reusable Docker Compose environment for developing and testing MediaWiki.
 
-## Supported default stack
+## Quick start
 
-- MediaWiki **1.46.2** (official Apache image, patched PHP 8.3.36 or later).
-- MariaDB **11.8.6**; Memcached 1.6.
-- Xdebug is **not installed or enabled by default**.
-- Host-published development ports bind to **127.0.0.1**, not to the public network.
+```bash
+git clone https://github.com/FiocruzLivre/mediawiki-development.git
+cd mediawiki-development
+docker compose up -d
+```
 
-See [the upgrade guide](docs/UPGRADING.md) before upgrading an existing wiki. Changing the image version alone **does not upgrade the MediaWiki source tree mounted in `volumes/mediawiki`**, the extensions, or the database.
+Open [MediaWiki](http://localhost:8080) and complete its installation wizard on the first run. The database and required services start automatically. Test emails appear at [Mailpit](http://localhost:8025).
 
-## Fresh development setup
+To customize the local address, database credentials or debugging, put overrides in an untracked `.env`. The available variables, defaults and their purposes are documented next to the corresponding settings in [docker-compose.yml](docker-compose.yml). The default credentials and loopback-only port bindings are intended **only for local development**, not public deployments.
 
-1. Clone this repository and create a project-specific, untracked `.env`. Set strong, distinct values for `WG_SECRET_KEY`, `WG_UPGRADE_KEY`, `WG_DB_PASSWORD`, `MYSQL_PASSWORD`, and `MYSQL_ROOT_PASSWORD` (for example, generate values using `openssl rand -hex 32`).
-2. Check out MediaWiki source corresponding to `MEDIAWIKI_VERSION` into `volumes/mediawiki`. For example:
+Application source code, data and uploads persist under `volumes/`. To work with existing source code, put it under `volumes/mediawiki` **before** starting the stack. Optional project-specific files can be supplied under `volumes/src/mediawiki`.
 
-   ```bash
-   git clone --depth 1 --branch 1.46.2 --recurse-submodules \
-     https://gerrit.wikimedia.org/r/mediawiki/core.git volumes/mediawiki
-   ```
+## Useful commands
 
-3. Place the chosen wiki's configuration into `volumes/src/mediawiki`. Both Mapa Mov Saúde and WikiFavelas use the canonical [FiocruzLivre/mediawiki-settings](https://github.com/FiocruzLivre/mediawiki-settings) repository (the older LibreCodeCoop/mapa-colaborativo URL redirects there). Existing installations may have divergent or uncommitted configurations: compare the specific wiki's settings, themes and extensions before deployment. Application settings are separate from this Docker setup. The entrypoint links overrides from `volumes/src/mediawiki`; review the settings and extensions before launching.
-4. Build and start the development services:
+```bash
+docker compose logs -f mediawiki
+docker compose exec mediawiki php maintenance/run.php update
+docker compose down
+```
 
-   ```bash
-   docker compose build mediawiki
-   docker compose up -d
-   docker compose exec mediawiki php maintenance/run.php update
-   ```
+The update command is for an **explicitly planned schema migration**, not for a fresh installation. See [upgrading an existing installation](docs/UPGRADING.md) before changing the application version. The container checks the existing source version and refuses mismatches rather than modifying it automatically.
 
-Do not publish the database, MailHog, or development PHP process directly on the Internet. Use a reviewed production Compose override with a TLS reverse proxy, external networks, and production-only secrets; inspect the effective configuration using `docker compose config`.
-
-## Development options
-
-| Variable | Default | Purpose |
-| --- | --- | --- |
-| `MEDIAWIKI_VERSION` | `1.46.2` | MediaWiki base image version; must match source code |
-| `MARIADB_VERSION` | `11.8.6` | Database image for a **new** development volume |
-| `HTTP_BIND_IP` | `127.0.0.1` | Host interface for MediaWiki HTTP |
-| `MYSQL_BIND_IP` | `127.0.0.1` | Host interface for database |
-| `MAILHOG_BIND_IP` | `127.0.0.1` | Host interface for test SMTP UI |
-| `ENABLE_XDEBUG` | `0` | Build Xdebug only when explicitly requested |
-| `XDEBUG_MODE` | `off` | Set to `debug` to enable the optional extension |
-
-To use debugging locally: set `ENABLE_XDEBUG=1` in your private `.env`, rebuild `mediawiki`, set `XDEBUG_MODE=debug`, and initiate a debugging session with the Xdebug trigger. Debugging is never activated automatically for public requests.
-
-## Verification
-
-Run `bats test/compose.bats` and `docker compose build mediawiki`. CI checks Compose defaults, debug opt-in, host bindings, supported PHP, and the required Memcached PHP extension. The application-level upgrade, extension compatibility, and migration remain environment-specific and must be validated separately.
+For local Xdebug, explicitly set `ENABLE_XDEBUG=1` and `XDEBUG_MODE=debug` in `.env`, rebuild the image and use an Xdebug trigger when debugging a request.

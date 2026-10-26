@@ -1,47 +1,32 @@
-# Upgrade an existing MediaWiki deployment
+# Upgrading an existing MediaWiki installation
 
-This is an operator checklist for both Mapa Mov Saúde and WikiFavelas. The shared Docker setup cannot safely upgrade an existing wiki by changing the container tag alone. **Shared configuration repository:** [FiocruzLivre/mediawiki-settings](https://github.com/FiocruzLivre/mediawiki-settings) covers Mapa Mov Saúde and WikiFavelas; the historical LibreCodeCoop/mapa-colaborativo URL redirects to it. Their local revisions, enabled extensions and uncommitted settings can differ: compare each environment against the intended configuration before rollout.
+This guide applies to any deployment using this shared Docker development setup. A changed image tag alone does **not** upgrade an existing MediaWiki code volume.
 
-## 1. Capture inventory and a recoverable baseline
+## Prepare and isolate
 
-Record the effective Docker Compose configuration, MediaWiki core version, actual PHP runtime, enabled skins/extensions, and all uncommitted modifications to the MediaWiki core. Keep application configuration (`LocalSettings.php`), uploads, and database credentials outside Git.
+1. Record the effective Compose configuration, application version, PHP runtime and enabled skins/extensions. Review custom code modifications and configuration separately.
+2. Make complete backups of the persistent database, application files and uploaded content. Verify that a backup can be read and at least one file can be restored. Capture a consistent database snapshot for rollback.
+3. Create a dedicated staging environment with its **own** volumes, database, project name and host ports. Never run a test migration against the production database.
 
-Create **independent** backups of the application directory (including uploads and custom extensions) and the database. Check a backup's size and completion markers, and restore at least one file into an isolated directory. Database rollback requires a pre-migration snapshot; reverting containers alone cannot reverse schema changes.
+## Update the application in staging
 
-## 2. Prepare isolated staging
+1. Change the base image version in the Compose configuration and use a **matching** MediaWiki source checkout in the staging application volume.
+2. Update and validate every installed extension and skin against the target MediaWiki core. Check Composer security advisories; do not bypass known vulnerabilities to make an outdated dependency resolve.
+3. Rebuild the image and start the isolated stack:
+   ```bash
+   docker compose build mediawiki
+   docker compose up -d
+   ```
+4. After confirming source and extensions are compatible, explicitly run the schema update:
+   ```bash
+   docker compose exec mediawiki php maintenance/run.php update
+   ```
+5. Exercise login, permissions, edits, previews, uploads, special pages, jobs, search, any installed extensions, and email delivery. Review service logs and health checks.
 
-Create a separate working directory and database; **do not** point staging at the production database or production volume. Copy only the necessary sanitized configuration and a consistent database snapshot. Make sure staging cannot send real user emails or tracking events.
+## Production change and rollback
 
-Check out MediaWiki `1.46.2` and a matching set of maintained extensions and skins. For Wikimedia-maintained extensions, prefer the `REL1_46` branch or a matching release. Audit third-party and custom extensions individually; disable only with a recorded compatibility decision. Preserve application customizations in separate version-controlled configuration or extensions, rather than reapplying edits to MediaWiki core.
+Schedule a maintenance window, freeze writes, create a final verified backup, and only then deploy the tested configuration/source and migrate its database. Verify functionality before restoring normal traffic.
 
-MediaWiki 1.46 requires PHP 8.3+; the official `mediawiki:1.46.2` image was checked with PHP 8.3.36. Database schema compatibility and extension compatibility must be checked independently.
+A database schema upgrade may not be reversible by restoring the old container. The rollback plan must include restoring the **matching database snapshot, application files and configuration**.
 
-## 3. Verify the container before upgrading data
-
-```bash
-docker compose config
-docker compose build mediawiki
-docker compose run --rm --no-deps --entrypoint php mediawiki -v
-```
-
-Never rely on a successfully built image as proof that the existing wiki's data, extensions, or skins work.
-
-## 4. Perform and test the staging migration
-
-After upgrading source and all compatible extensions/skins, run:
-
-```bash
-docker compose exec mediawiki php maintenance/run.php update
-```
-
-Review the command output and test login, permissions, edits, preview, uploads, VisualEditor, PageForms, semantic and geospatial features (when enabled), special pages, jobs, search, and any custom themes. Verify Nginx/proxy HTTP responses, logs, backups, and cache behavior.
-
-Compare all wiki-specific functionality before and after upgrading. If an extension has no compatible release, treat that as a migration blocker rather than silently omitting it.
-
-## 5. Production cutover and rollback
-
-Schedule a maintenance window, stop writes, take a final consistent database and file backup, deploy the tested image/source/configuration, run the production migration, and validate basic functions and service monitoring before restoring traffic.
-
-Keep the former application artifacts and complete database snapshot until all tests pass. Rollback after a database migration means restoring the matching **database snapshot and source tree**, not only switching Docker images. Avoid mixing production database versions or multiple MediaWiki core versions against one database.
-
-For published deployments, remove debugging, bind administrative ports privately, use secure credentials, and keep a reliable backup and external monitoring procedure. Upgrading the database engine should be evaluated independently of the MediaWiki application migration.
+Never place production credentials, backups, or instance-specific configuration in this general-purpose repository.

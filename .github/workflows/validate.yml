@@ -1,4 +1,4 @@
-name: Validate MediaWiki development image
+name: Validate MediaWiki development environment
 
 on:
   push:
@@ -18,22 +18,35 @@ jobs:
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y bats jq
-      - name: Validate Compose behavior
+      - name: Validate Compose configuration
         run: bats test/compose.bats
 
-  image:
+  integration:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
-      - name: Build supported MediaWiki image
-        env:
-          WG_SECRET_KEY: test-not-a-real-secret
-          WG_UPGRADE_KEY: test-not-a-real-secret
-        run: docker compose build mediawiki
-      - name: Check patched PHP and required runtime extensions
-        env:
-          WG_SECRET_KEY: test-not-a-real-secret
-          WG_UPGRADE_KEY: test-not-a-real-secret
+      - name: Start an empty environment
+        run: docker compose up -d
+      - name: Validate bootstrap and dependencies
         run: |
-          docker compose run --rm --no-deps --entrypoint php mediawiki -r 'exit(version_compare(PHP_VERSION, "8.3.36", ">=") ? 0 : 1);'
-          docker compose run --rm --no-deps --entrypoint php mediawiki -m | grep -Fx 'memcached'
+          set -euo pipefail
+          # Startup copies the application to a persistent volume on its first run.
+          for attempt in $(seq 1 45); do
+            if curl -fsS http://127.0.0.1:8080/ >/dev/null; then
+              break
+            fi
+            sleep 2
+          done
+          curl -fsS http://127.0.0.1:8080/ >/dev/null
+          docker compose exec -T mediawiki php -r 'exit(version_compare(PHP_VERSION, "8.3", ">=") ? 0 : 1);'
+          docker compose exec -T mediawiki php -m | grep -Fx 'memcached'
+          docker compose exec -T mediawiki php -m | grep -Fx 'gd'
+          docker compose exec -T mediawiki sh -c 'test -f index.php && test -f includes/Defines.php'
+          docker compose exec -T database healthcheck.sh --connect --innodb_initialized
+          curl -fsS http://127.0.0.1:8025/ >/dev/null
+      - name: Collect logs on failure
+        if: failure()
+        run: docker compose logs --tail=100
+      - name: Tear down
+        if: always()
+        run: docker compose down -v --remove-orphans
