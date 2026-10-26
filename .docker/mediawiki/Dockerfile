@@ -11,7 +11,7 @@ RUN set -eux; \
     apt-get update; \
     apt-get install -y --no-install-recommends rsync; \
     rm -rf /var/lib/apt/lists/*; \
-    install-php-extensions @composer memcached; \
+    install-php-extensions @composer gd memcached; \
     if [ "$ENABLE_XDEBUG" = "1" ]; then install-php-extensions xdebug; fi; \
     rm -f /usr/local/bin/install-php-extensions; \
     sed -i 's#DocumentRoot /var/www/html#DocumentRoot /var/www/mediawiki#' /etc/apache2/sites-available/000-default.conf
