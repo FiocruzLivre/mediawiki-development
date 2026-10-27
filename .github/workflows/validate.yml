@@ -13,7 +13,7 @@ jobs:
   compose:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Install Bats and jq
         run: |
           sudo apt-get update -qq
@@ -24,7 +24,7 @@ jobs:
   integration:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Start an empty environment
         run: docker compose up -d
       - name: Validate bootstrap and dependencies
@@ -41,6 +41,7 @@ jobs:
           docker compose exec -T mediawiki php -r 'exit(version_compare(PHP_VERSION, "8.3", ">=") ? 0 : 1);'
           docker compose exec -T mediawiki php -m | grep -Fx 'memcached'
           docker compose exec -T mediawiki php -m | grep -Fx 'gd'
+          docker compose exec -T mediawiki composer --no-interaction --version
           docker compose exec -T mediawiki sh -c 'test -f index.php && test -f includes/Defines.php'
           docker compose exec -T database healthcheck.sh --connect --innodb_initialized
           curl -fsS http://127.0.0.1:8025/ >/dev/null

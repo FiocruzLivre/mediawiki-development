@@ -48,7 +48,7 @@ services:
       - composer-cache:/var/www/.composer
 
   database:
-    image: mariadb:${MARIADB_VERSION:-11.8.6}
+    image: mariadb:${MARIADB_VERSION:-11.8.9}
     restart: unless-stopped
     ports:
       # Development-only SQL access from the host; never bind to the public network.
