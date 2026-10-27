@@ -33,6 +33,12 @@ RUN set -eux; \
         --no-dev --no-plugins --no-scripts --no-interaction --no-progress; \
     COMPOSER_ALLOW_SUPERUSER=1 composer audit --locked --no-dev
 
+# Composer must be able to fetch MediaWiki extensions pinned to Git commits.
+RUN set -eux; \
+    apt-get update; \
+    apt-get install -y --no-install-recommends git; \
+    rm -rf /var/lib/apt/lists/*
+
 COPY scripts/ /usr/local/bin/
 COPY config/php/ /usr/local/etc/php/conf.d/
 
