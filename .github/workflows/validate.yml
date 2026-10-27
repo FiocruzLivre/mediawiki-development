@@ -38,10 +38,13 @@ jobs:
             sleep 2
           done
           curl -fsS http://127.0.0.1:8080/ >/dev/null
-          docker compose exec -T mediawiki php -r 'exit(version_compare(PHP_VERSION, "8.3", ">=") ? 0 : 1);'
+          docker compose exec -T mediawiki php -r 'exit(version_compare(PHP_VERSION, "8.5", ">=") ? 0 : 1);'
           docker compose exec -T mediawiki php -m | grep -Fx 'memcached'
           docker compose exec -T mediawiki php -m | grep -Fx 'gd'
+          docker compose exec -T mediawiki php -m | grep -Fx 'luasandbox'
+          docker compose exec -T mediawiki php -m | grep -Fx 'apcu'
           docker compose exec -T mediawiki composer --no-interaction --version
+          docker compose exec -T mediawiki composer audit --locked --no-dev
           docker compose exec -T mediawiki sh -c 'command -v unzip && command -v git'
           docker compose exec -T mediawiki sh -c 'test -f index.php && test -f includes/Defines.php'
           docker compose exec -T database healthcheck.sh --connect --innodb_initialized

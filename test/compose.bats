@@ -21,6 +21,12 @@ setup() {
   [ "$status" -ne 0 ]
 }
 
+@test "PHP 8.5 is the default supported runtime" {
+  run docker compose -f "$REPO_ROOT/docker-compose.yml" config --format json
+  [ "$status" -eq 0 ]
+  printf '%s\n' "$output" | jq -e '.services.mediawiki.build.args.PHP_RUNTIME_VERSION == "8.5-apache-trixie"'
+}
+
 @test "database credentials use the same environment overrides" {
   run env WG_DB_NAME=override_db WG_DB_USER=override_user WG_DB_PASSWORD=override_pw \
     docker compose -f "$REPO_ROOT/docker-compose.yml" config --format json

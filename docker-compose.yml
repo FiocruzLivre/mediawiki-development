@@ -5,6 +5,8 @@ services:
       args:
         # Image version is the source of truth. Existing source volumes are not automatically upgraded.
         MEDIAWIKI_VERSION: ${MEDIAWIKI_VERSION:-1.46.2}
+        # PHP 8.5 is the newest runtime supported by MediaWiki 1.46.
+        PHP_RUNTIME_VERSION: ${PHP_RUNTIME_VERSION:-8.5-apache-trixie}
         # Debugger is excluded from the image unless explicitly requested for local use.
         ENABLE_XDEBUG: ${ENABLE_XDEBUG:-0}
     restart: unless-stopped
