@@ -59,6 +59,13 @@ setup() {
     .services.mailpit.ports[0].published == "19082"'
 }
 
+@test "entrypoint prevents sticky directory from blocking config symlinks" {
+  run grep -F 'if [[ -k "$wiki_dir" ]]; then' "$REPO_ROOT/.docker/mediawiki/scripts/mediawiki-entrypoint"
+  [ "$status" -eq 0 ]
+  run grep -F 'chmod 0755 "$wiki_dir"' "$REPO_ROOT/.docker/mediawiki/scripts/mediawiki-entrypoint"
+  [ "$status" -eq 0 ]
+}
+
 @test "wiki waits for a healthy database and keeps data on volumes" {
   run docker compose -f "$REPO_ROOT/docker-compose.yml" config --format json
   [ "$status" -eq 0 ]

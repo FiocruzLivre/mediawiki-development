@@ -47,6 +47,14 @@ if [[ -z "$source_version" || "$source_version" != "$MEDIAWIKI_IMAGE_VERSION" ]]
     exit 1
 fi
 
+# The upstream source directory may have sticky world-writable permissions.
+# Linux protected_symlinks then blocks Apache from following LocalSettings.php
+# symlinks, even when the linked file itself is readable.
+# Normalize this top-level directory only; never recurse on each startup.
+if [[ -k "$wiki_dir" ]]; then
+    chmod 0755 "$wiki_dir"
+fi
+
 # Link only non-conflicting optional project settings. Never delete upstream files.
 if [[ -d /var/www/src/mediawiki ]]; then
     shopt -s nullglob
