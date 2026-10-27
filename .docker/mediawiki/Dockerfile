@@ -10,7 +10,7 @@ COPY --from=composer:2.10.3 /usr/bin/composer /usr/local/bin/composer
 
 RUN set -eux; \
     apt-get update; \
-    apt-get install -y --no-install-recommends rsync; \
+    apt-get install -y --no-install-recommends rsync unzip; \
     rm -rf /var/lib/apt/lists/*; \
     install-php-extensions gd memcached; \
     if [ "$ENABLE_XDEBUG" = "1" ]; then install-php-extensions xdebug; fi; \
