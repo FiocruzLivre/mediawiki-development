@@ -1,0 +1,1153 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "[[Casa_Camatuê]]",
+        "marker-size": "large"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -54.1987,
+          -23.052
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "[[CEBES]]",
+        "marker-size": "large"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -43.19,
+          -22.9
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "[[Frente_pela_vida]]",
+        "marker-size": "large"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -43.2,
+          -23.0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "[[Motirô]]",
+        "marker-size": "large"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -38.53,
+          -13.0
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "[[Rede_Unida]]",
+        "marker-size": "large"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -51.2048,
+          -30.0383
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "[[Associação_Comunidade_Unida_de_Mapele]]",
+        "marker-size": "large"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -38.4001,
+          -12.787
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "[[Associação Brasileira de Saúde Coletiva]]",
+        "marker-size": "large"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -43.3,
+          -23.1
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "[[Mães da Terra]]",
+        "marker-size": "large"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -51.0646,
+          0.0308
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "[[Associação_Beneficente_Amigos_da_Comunidade]]",
+        "marker-size": "large"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -36.6367,
+          -9.4171
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "[[ATAM,_Associação_Transmasculina_do_Amazonas]]",
+        "marker-size": "large"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -60.0261,
+          -3.10719
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "[[AREDACRE_-_Associação_de_Redução_de_Danos_do_Acre]]",
+        "marker-size": "large"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -67.8085,
+          -9.9765
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "[[Movimento dos Trabalhadores Rurais Sem Terra - MST]]",
+        "marker-size": "large"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -46.6486,
+          -23.5341
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "[[Central Única dos Trabalhadores - CUT]]",
+        "marker-size": "large"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -46.6192,
+          -23.5492
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "[[Urihi Associação Yanomami]]",
+        "marker-size": "large"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -60.7042,
+          2.8228
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "[[Cuida_de_mim_-_Alguém_que_eu_Amo_tem_Alzheimer]]",
+        "marker-size": "large"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -46.5715,
+          -23.4944
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "[[Casa_das_Negas]]",
+        "marker-size": "large"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -38.5832,
+          -3.704
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "[[MUCA_-_Mulheres_Unidas_do_Caratoíra]]",
+        "marker-size": "large"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -40.3381,
+          -20.3222
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "[[GMNMA_-_Grupo_de_Mulheres_Negras_Mãe_Andresa]]",
+        "marker-size": "large"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -44.2972,
+          -2.5269
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "[[Coletivo_BIL_-_Coletivo_de_Mulheres_Bissexuais_e_Lésbicas_Trans_e_Cis]]",
+        "marker-size": "large"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -42.5367,
+          -19.469
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "[[ICAGE_-_Instituto_Casa_da_Gente]]",
+        "marker-size": "large"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -46.826,
+          -23.529
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "[[GADA_CAJAZEIRAS_-_Grupo_de_Amigos_Diabéticos_em_Ação]]",
+        "marker-size": "large"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -38.5718,
+          -6.8763
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "[[ABRAFH_-_Associação_Brasileira_de_Famílias_Homotransafetivas]]",
+        "marker-size": "large"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -49.2708,
+          -25.4334
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "[[Comunidade_Quilombolas_Barra_da_Aroeira]]",
+        "marker-size": "large"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -47.7135,
+          -10.2806
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "[[ABRAFH_-_Associação_Brasileira_de_Famílias_Homotransafetivas]]",
+        "marker-size": "large"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -49.2708,
+          -25.4334
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "[[Comunidade_Quilombolas_Barra_da_Aroeira]]",
+        "marker-size": "large"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -47.7135,
+          -10.2806
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "[[Associação de Amigos e Pessoas com Lúpus do Vale do São Francisco]]",
+        "marker-size": "large"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -40.4609,
+          -9.3898
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "[[ABRADFAL - Associação Brasiliense de Pessoas com Doença Falciforme]]",
+        "marker-size": "large"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -47.9292,
+          -15.7801
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "[[Projeto de Extensão Vida Ativa]]",
+        "marker-size": "large"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -49.2422,
+          -16.823
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "[[FONATRANS - Fórum Nacional de Travestis e Transexuais Negras e Negros]]",
+        "marker-size": "large"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -41.4699,
+          -7.0829
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "[[Associação Espiritualista de Umbanda Nosso Lar]]",
+        "marker-size": "large"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -63.8536,
+          -8.7491
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "[[ATERR - Associação de Travestis e Transexuais do estado de Roraima]]",
+        "marker-size": "large"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -60.6714,
+          2.8195
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "[[Associação Alegre Mente]]",
+        "marker-size": "large"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -48.5809,
+          -27.5829
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "[[Que Vem das Ruas]]",
+        "marker-size": "large"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -37.0785,
+          -10.954
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "[[ANPLúpus - Associação Nacional das Pessoas com Lúpus]]",
+        "marker-size": "large"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -48.0136,
+          -15.8347
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "[[Centro de Preservação e Conservação Ambiental - Casa da Natureza]]",
+        "marker-size": "large"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -48.1522,
+          -15.8092
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "[[Coletivo Nacional de Saúde Quilombola da CONAQ]]",
+        "marker-size": "large"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -47.9849,
+          -15.8285
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "[[CEDEP - Centro de Cultura e Desenvolvimento do Paranoá e Itapoã]]",
+        "marker-size": "large"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -47.93,
+          -15.78
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "[[Associação Crioulas do Quilombo Urbano do Barranco de São Benedito]]",
+        "marker-size": "large"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -60.0126,
+          -3.1215
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "[[Tekó - Coletivo de Artivismo Indígena da Região Metropolitana de Belém]]",
+        "marker-size": "large"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -48.3876,
+          -13.5279
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "[[Grupo para Valorização, Integração e Dignificação do Doente de AIDS - Grupo Paravidda]]",
+        "marker-size": "large"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -48.4891,
+          -14.6691
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "[[Grupo de Apoio Solidariedade]]",
+        "marker-size": "large"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -48.4505,
+          -14.5823
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "[[Movimento Negro Unificado]]",
+        "marker-size": "large"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -46.6388,
+          -23.5489
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "[[Movimento dos Atingidos por Barragens]]",
+        "marker-size": "large"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -46.88,
+          -23.8954
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "[[Grito dos Excluídos Continental]]",
+        "marker-size": "large"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -46.3688,
+          -23.5499
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "[[Instituto de Pesquisas das Culturas Negras – IPCN]]",
+        "marker-size": "large"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -43.1873,
+          -22.9111
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "[[Movimento Nacional da População em Situação de Rua - MNPR]]",
+        "marker-size": "large"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -35.211,
+          -5.7945
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "[[Associação Vida e Justiça em Apoio e Defesa dos Direitos das Vítimas da COVID-19]]",
+        "marker-size": "large"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -47.8868,
+          -15.798
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "[[Viramundo]]",
+        "marker-size": "large"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -43.24943,
+          -22.98822
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "[[Favela Compassiva]]",
+        "marker-size": "large"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -43.24943,
+          -22.98822
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "[[Observatório Tuberculose Brasil]]",
+        "marker-size": "large"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -43.2096,
+          -22.9035
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "[[Fórum Intersindical Saúde-Trabalho-Direito do Rio de Janeiro]]",
+        "marker-size": "large"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -43.196388,
+          -22.908333
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "[[ABEn, Seção MA]]",
+        "marker-size": "large"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -44.28546,
+          -2.48885
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "[[UNALGBT - União Nacional de Lésbicas, Gays, Bissexuais, Travestis e Transexuais]]",
+        "marker-size": "large"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -46.6388,
+          -23.5489
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "[[Loucure-se]]",
+        "marker-size": "large"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -40.3512,
+          -3.68274
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "[[A.M.I.G.A.S. - Associação de Mulheres de Itaguaí]]",
+        "marker-size": "large"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -43.78053,
+          -22.86381
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "[[CSF Fusão - Associação Centro Social Fusão | Sou um beija-flor que aprendi a voar]]",
+        "marker-size": "large"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -43.41535,
+          -22.76821
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "[[Associação Nacional dos Bolsistas Mais Médicos]]",
+        "marker-size": "large"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -44.7832,
+          -22.2292
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "[[Todos Pelas Vacinas]]",
+        "marker-size": "large"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -46.6388,
+          -23.5489
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "[[IBTx - Instituto Brasileiro de Transplantados | Transplante requer coerência e valores]]",
+        "marker-size": "large"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -47.9292,
+          -15.7801
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "[[Pastoral da Criança]]",
+        "marker-size": "large"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -49.29072,
+          -25.41549
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "[[Conselho Nacional de Saúde]]",
+        "marker-size": "large"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -47.9292,
+          -15.7801
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "[[Fórum de Saúde Mental de Uberlândia]]",
+        "marker-size": "large"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -48.2622,
+          -18.9113
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "[[ReHuNa - Atuação da ReHuNa ao longo dos anos]]",
+        "marker-size": "large"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -43.18128,
+          -22.90157
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "[[INME - Instituto Não Me Esqueças]]",
+        "marker-size": "large"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -51.15652,
+          -23.32154
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "[[O Centro Socialista da Penha Circular (CSPC)]]",
+        "marker-size": "large"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -43.285,
+          -22.8366
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "[[Saúde para os trabalhadores da rua - MUCA]]",
+        "marker-size": "large"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -43.196388,
+          -22.908333
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "[[Eu defendo o SUS: nossa história]]",
+        "marker-size": "large"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -38.5434,
+          -3.71839
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "[[Movimento de Mulheres Olga Benario]]",
+        "marker-size": "large"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -38.5434,
+          -3.71839
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "[[Movimento Popular Saúde Campinas]]",
+        "marker-size": "large"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -47.0616,
+          -22.9064
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "[[Historico do Fórum dos Usuários do SUS NO MARANHÃO E EM SÃO LUIS]]",
+        "marker-size": "large"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -44.3068,
+          -2.53073
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "[[DII Brasil - Associação Nacional das Pessoas com Doenças Inflamatórias Intestinais]]",
+        "marker-size": "large"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -43.9542,
+          -19.8157
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "[[Atopicos, Alérgicos, Crônicos, Oncológicos e Raros]]",
+        "marker-size": "large"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -43.9542,
+          -19.8157
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "[[MAB Belém - Movimento dos Atingidos por Barragens da Região Metropolitana de Belém-PA]]",
+        "marker-size": "large"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -48.5024,
+          -1.45502
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "[[Movimento Outubro Rosa Ceará]]",
+        "marker-size": "large"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -38.5434,
+          -3.71839
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "[[Instituto Unidos pela Vida]]",
+        "marker-size": "large"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -49.2733,
+          -25.4284
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "[[Central de Movimentos Populares (CMP-BR)]]",
+        "marker-size": "large"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -46.637592557671795,
+          -23.618138142442692
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "[[Conselho Municipal de Saúde de Nova Lima]]",
+        "marker-size": "large"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -43.85022479814869,
+          -19.98164795229082
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "[[Superando o Lúpus]]",
+        "marker-size": "large"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -46.639273042328206,
+          -23.58048042204065
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "[[Agenda Jovem Fiocruz]]",
+        "marker-size": "large"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -43.24363300569449,
+          -22.877033481015513
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "[[SUS]]",
+        "marker-size": "large"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -47.9292,
+          -15.7801
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "[[Fundação Oswaldo Cruz]]",
+        "marker-size": "large"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -43.24363300569449,
+          -22.877033481015513
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "title": "[[Frente Nacional Contra a Privatização da Saúde]]",
+        "marker-size": "large"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -43.24363300569449,
+          -22.877033481015513
+        ]
+      }
+    }
+  ]
+}

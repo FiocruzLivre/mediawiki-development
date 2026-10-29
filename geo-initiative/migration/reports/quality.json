@@ -1,0 +1,21 @@
+{
+  "source_page_id": 137,
+  "revision_id": 2576,
+  "revision_timestamp": "2026-10-29T04:43:39Z",
+  "wikitext_sha256": "afd48e1b742121fb5195969dc09e50528466912d15b31637d492965a003dca73",
+  "total": 82,
+  "technical_candidates": 46,
+  "editorial_review": 36,
+  "flags": {
+    "redirect": 1,
+    "resolved_title_differs": 3,
+    "duplicate_title": 4,
+    "shared_coordinates_review": 23,
+    "missing_page": 13
+  },
+  "unknown_geo_role": 82,
+  "notes": [
+    "Technical candidate does not mean that the coordinates or geographic role have been editorially confirmed.",
+    "All 82 require editorial role decision before publishing role information."
+  ]
+}
