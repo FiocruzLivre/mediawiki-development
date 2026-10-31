@@ -42,7 +42,7 @@ docker compose config --services
 docker compose up -d
 ```
 
-Nesse exemplo, somente `mediawiki` e `memcached` são iniciados; MariaDB e Mailpit internos ficam desativados. `depends_on` não verifica a disponibilidade de bancos externos: valide conectividade e recuperação antes da entrada em produção.
+Nesse exemplo, somente `mediawiki` e `memcached` são iniciados; MariaDB e Mailpit internos ficam desativados. Se o banco externo não usar a porta 3306, defina `WG_DB_PORT` no `.env`. O entrypoint verifica a autenticação no MySQL antes de inicializar a wiki e o Apache, aguardando até 60 segundos por padrão (`WAIT_FOR_DB_TIMEOUT`, ajustável no Compose override). Se a conexão não estiver disponível, ele falha; a política de reinício do Docker tenta novamente. Isso não substitui a recuperação de conexões durante o funcionamento do MediaWiki.
 
 ## Atualizações
 

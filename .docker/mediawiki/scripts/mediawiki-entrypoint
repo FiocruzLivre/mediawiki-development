@@ -18,6 +18,8 @@ if [[ -d /var/www/.composer ]]; then
     chown www-data:www-data /var/www/.composer
 fi
 
+php /usr/local/bin/wait-for-db.php
+
 /usr/local/bin/mediawiki-prepare \
     /var/www/html /var/www/mediawiki /var/www/src/mediawiki \
     "$MEDIAWIKI_IMAGE_VERSION"
