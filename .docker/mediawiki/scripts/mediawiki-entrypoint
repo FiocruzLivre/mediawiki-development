@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+# Host mapping changes the container's user, not ownership of existing wiki data.
+for value in "${HOST_UID:-1000}" "${HOST_GID:-1000}"; do
+    [[ "$value" =~ ^[0-9]+$ ]] && (( 10#$value >= 100 )) || {
+        echo "HOST_UID and HOST_GID must be numeric and unprivileged" >&2
+        exit 1
+    }
+done
+if [[ "$(id -g www-data)" != "${HOST_GID:-1000}" ]]; then
+    groupmod --non-unique --gid "${HOST_GID:-1000}" www-data
+fi
+if [[ "$(id -u www-data)" != "${HOST_UID:-1000}" ]]; then
+    usermod --non-unique --uid "${HOST_UID:-1000}" www-data
+fi
+if [[ -d /var/www/.composer ]]; then
+    chown www-data:www-data /var/www/.composer
+fi
+
+php /usr/local/bin/wait-for-db.php
+
+/usr/local/bin/mediawiki-prepare \
+    /var/www/html /var/www/mediawiki /var/www/src/mediawiki \
+    "$MEDIAWIKI_IMAGE_VERSION"
+
+exec apache2-foreground

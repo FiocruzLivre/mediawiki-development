@@ -1,0 +1,72 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+source_dir="${1:?Missing MediaWiki source directory}"
+wiki_dir="${2:?Missing persistent wiki directory}"
+config_dir="${3:?Missing site configuration directory}"
+image_version="${4:?Missing expected MediaWiki version}"
+
+version_of() {
+    local defines="$1/includes/Defines.php"
+    [[ -f "$defines" ]] || { echo "Missing includes/Defines.php: $defines" >&2; return 1; }
+    sed -nE "s/.*define\( 'MW_VERSION', '([^']+)' \).*/\1/p" "$defines" | head -n 1
+}
+
+[[ -d "$source_dir" && -d "$wiki_dir" ]] || {
+    echo "MediaWiki source or volume directory not found" >&2
+    exit 1
+}
+
+seeded=0
+if [[ ! -f "$wiki_dir/index.php" ]]; then
+    if [[ -n "$(find "$wiki_dir" -mindepth 1 -maxdepth 1 -print -quit)" ]]; then
+        echo "Wiki volume has files but no index.php; refusing overwrite" >&2
+        exit 1
+    fi
+    source_version="$(version_of "$source_dir")"
+    [[ -f "$source_dir/index.php" && "$source_version" = "$image_version" ]] || {
+        echo "Invalid image source: version mismatch or index.php missing" >&2
+        exit 1
+    }
+    rsync -a --no-owner --no-group -- "$source_dir/" "$wiki_dir/"
+    seeded=1
+fi
+
+volume_version="$(version_of "$wiki_dir")"
+if [[ -z "$volume_version" || "$volume_version" != "$image_version" ]]; then
+    echo "MediaWiki source version '${volume_version:-unknown}' differs from image version '$image_version'; no files were changed" >&2
+    exit 1
+fi
+
+# Validate every existing destination before linking anything.
+if [[ -d "$config_dir" ]]; then
+    shopt -s nullglob
+    for source in "$config_dir"/*; do
+        target="$wiki_dir/${source##*/}"
+        expected="$(realpath --relative-to="$wiki_dir" "$source")"
+        if [[ -L "$target" && "$(readlink "$target")" = "$expected" ]]; then
+            continue
+        fi
+        if [[ -e "$target" || -L "$target" ]]; then
+            echo "Conflicting configuration file: $target; refusing overwrite" >&2
+            exit 1
+        fi
+    done
+fi
+
+if [[ "$seeded" = 1 && "$(id -u)" = 0 ]]; then
+    chown -R www-data:www-data "$wiki_dir"
+fi
+
+# Prevent protected_symlinks from blocking the configuration link.
+if [[ -k "$wiki_dir" ]]; then
+    chmod 0755 "$wiki_dir"
+fi
+
+if [[ -d "$config_dir" ]]; then
+    for source in "$config_dir"/*; do
+        target="$wiki_dir/${source##*/}"
+        expected="$(realpath --relative-to="$wiki_dir" "$source")"
+        [[ -L "$target" ]] || ln -s "$expected" "$target"
+    done
+fi

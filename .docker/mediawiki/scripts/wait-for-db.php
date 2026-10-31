@@ -1,24 +1,55 @@
 #!/usr/bin/env php
 <?php
-echo "⌛ Waiting for database " . getenv('WG_DB_TYPE') ."\n";
+declare( strict_types=1 );
 
-function dbIsUp(string $dbName): bool {
-    try {
-        if (getenv('WG_DB_TYPE') === 'mysql') {
-            new mysqli(getenv('WG_DB_SERVER'),getenv('WG_DB_USER'),getenv('WG_DB_PASSWORD'),getenv('WG_DB_NAME'));
-        } else {
-            // Will use SQLite
-            return true;
-        }
-    } catch(Exception $e) {
-        echo "⛔ Unable to conect to $dbName server: " . $e->getMessage()."\n";
-        return false;
+$type = strtolower( trim( (string)( getenv( 'WG_DB_TYPE' ) ?: 'mysql' ) ) );
+
+if ( $type === 'sqlite' ) {
+    exit( 0 ); // SQLite has no external database service to wait for.
+}
+if ( $type !== 'mysql' ) {
+    fwrite( STDERR, "Unsupported database type: $type\n" );
+    exit( 1 );
+}
+
+$host = getenv( 'WG_DB_SERVER' );
+$user = getenv( 'WG_DB_USER' );
+$name = getenv( 'WG_DB_NAME' );
+$password = getenv( 'WG_DB_PASSWORD' );
+if ( !$host || !$user || !$name || $password === false ) {
+    fwrite( STDERR, "Missing MySQL connection settings\n" );
+    exit( 1 );
+}
+
+$timeout = filter_var(
+    getenv( 'WAIT_FOR_DB_TIMEOUT' ) ?: '60',
+    FILTER_VALIDATE_INT,
+    [ 'options' => [ 'min_range' => 1, 'max_range' => 600 ] ]
+);
+if ( $timeout === false ) {
+    fwrite( STDERR, "WAIT_FOR_DB_TIMEOUT must be between 1 and 600 seconds\n" );
+    exit( 1 );
+}
+
+mysqli_report( MYSQLI_REPORT_OFF );
+$deadline = microtime( true ) + $timeout;
+fwrite( STDOUT, "Waiting for MySQL database connection...\n" );
+
+do {
+    $connection = mysqli_init();
+    $connection->options( MYSQLI_OPT_CONNECT_TIMEOUT, 2 );
+    $ready = @$connection->real_connect( $host, $user, $password, $name );
+    if ( $ready ) {
+        $connection->close();
+        fwrite( STDOUT, "MySQL database connection ready\n" );
+        exit( 0 );
     }
-    return true;
-}
+    $connection->close();
+    $remaining = $deadline - microtime( true );
+    if ( $remaining > 0 ) {
+        usleep( (int)( min( 1.0, $remaining ) * 1000000 ) );
+    }
+} while ( $remaining > 0 );
 
-while(!dbIsUp(getenv('WG_DB_TYPE'))) {
-    sleep(1);
-}
-
-echo "✅ Database " . getenv('WG_DB_TYPE') . " ready\n";
+fwrite( STDERR, "MySQL database unavailable after $timeout seconds\n" );
+exit( 1 );

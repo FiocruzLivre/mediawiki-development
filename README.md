@@ -1,42 +1,23 @@
-# Mediawiki development environment
+# Imagem MediaWiki compartilhada
 
-A development environment for Mediawiki
+Imagem e Docker Compose utilizados no desenvolvimento, na homologação e na produção do [MapaMovSaúde](https://github.com/FiocruzLivre/mapa-mov-saude) e da [WikiFavelas](https://github.com/FiocruzLivre/wikifavelas-mediawiki). Configurações, extensões e dados de cada wiki ficam em seus próprios repositórios e servidores.
 
-## Setup development environment
+## Uso local
 
-Clone your project to folder `volumes/src`
-
-Example:
-```bash
-git clone https://github.com/youroganization/repositoryname volumes/src
-```
-To each file that you want to override from your project into mediawiki, you will need to put inside folder volumes/src/mediawiki and run the follow command:
-
-```yaml
-docker compose exec mediawiki php /var/www/scripts/init.php
-```
-Clone the MediaWiki project source, or put your existing mediawiki folder, into `volumes/mediawiki`
-
-Example:
-```bash
-git clone  --progress --single-branch --depth 1 --branch 1.41.0 --recurse-submodules -j 4 https://gerrit.wikimedia.org/r/mediawiki/core.git volumes/mediawiki
+```sh
+docker compose up -d --build
 ```
 
-Check if you will need to change any default environment value at `docker.compose.yml` and if you need to change, create a `.env` file with the custom environments values.
+Instalação nova: abra http://localhost:8080 para configurar o MediaWiki; mensagens de teste em http://localhost:8025. O código fica em `volumes/mediawiki`, enquanto a configuração da wiki pode ser montada em `volumes/src/mediawiki`. Os valores locais estão no [Compose](docker-compose.yml); coloque alterações e segredos apenas no `.env` não versionado.
 
-Run the command:
-```bash
-docker compose up
-```
-## Install extension
+## Instalação atrás de proxy ou com banco externo
 
-```bash
-COMPOSER=composer.local.json composer require --no-update mediawiki/page-forms
-composer update --no-dev -o
-```
+Consulte o [guia de implantação](docs/deployment.md) para criar o `docker-compose.override.yml` privado, configurar banco externo e proxy reverso e desativar serviços locais. Confira o Compose resultante antes de iniciar os contêineres. Nunca use credenciais de desenvolvimento em produção.
 
-## Updates if have database change
+## Atualizações
 
-```bash
-php maintenance/update.php --quick
-```
+O [Renovate](renovate.json) propõe PRs de versões após sua habilitação no GitHub, sem merge ou deploy automático. Como o MediaWiki 1.46.2 fixa o Symfony YAML em uma versão vulnerável, o build permite atualizações compatíveis na série 7.4 e executa `composer audit`. Essa exceção temporária deve ser retirada quando uma versão estável do MediaWiki incorporar a correção.
+
+Para publicar no registry da organização, depois de revisar e integrar o PR, crie uma tag no branch `main` como `1.46.2-r1`. O workflow publica `ghcr.io/fiocruzlivre/mediawiki:1.46.2-r1` e uma tag imutável com o SHA, somente após os testes. A revisão `r2` representa outra compilação da **mesma versão MediaWiki**. Não é criado `latest` e não há implantação automática.
+
+**Atenção:** a imagem só copia o código MediaWiki para `volumes/mediawiki` quando o volume está vazio. Atualizar a imagem **não atualiza** o código ou dependências de um volume já existente. Em produção, revise as diferenças e as versões de extensões, valide backup/restauração, atualize uma cópia isolada, execute `php maintenance/run.php update` quando necessário e só então promova o release validado. Planeje reversão de banco, arquivos e código juntos.

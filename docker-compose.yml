@@ -3,55 +3,93 @@ services:
     build:
       context: .docker/mediawiki
       args:
-        MEDIAWIKI_VERSION: ${MEDIAWIKI_VERSION:-1.41.0}
+        # Renovate updates image versions by PR; persistent source volumes are not upgraded.
+        # renovate: datasource=docker depName=mediawiki
+        MEDIAWIKI_VERSION: ${MEDIAWIKI_VERSION:-1.46.2}
+        # renovate: datasource=docker depName=php
+        PHP_RUNTIME_VERSION: ${PHP_RUNTIME_VERSION:-8.5.12-apache-trixie}
+        # Enable the debugger locally only; production uses ENABLE_XDEBUG=0.
+        ENABLE_XDEBUG: ${ENABLE_XDEBUG:-0}
     restart: unless-stopped
+    depends_on:
+      database:
+        condition: service_healthy
     ports:
-      - ${HTTP_PORT:-80}:80
+      # Listen on loopback; production removes published ports through an override.
+      - "${HTTP_BIND_IP:-127.0.0.1}:${HTTP_PORT:-8080}:80"
     environment:
+      # Local file ownership; set UID/GID for the host account in .env.
       HOST_UID: ${HOST_UID:-1000}
       HOST_GID: ${HOST_GID:-1000}
-      XDEBUG_CONFIG: ${XDEBUG_CONFIG:-client_host=172.17.0.1 client_port=9003 start_with_request=yes}
-      TZ: ${TZ:-CET}
-      WG_SERVER: ${WG_SERVER:-http://localhost}
-      WG_SECRET_KEY: ${WG_SECRET_KEY}
-      WG_UPGRADE_KEY: ${WG_UPGRADE_KEY}
+      XDEBUG_MODE: ${XDEBUG_MODE:-off}
+      XDEBUG_CONFIG: ${XDEBUG_CONFIG:-client_host=host.docker.internal client_port=9003}
+      TZ: ${TZ:-UTC}
+      WG_SERVER: ${WG_SERVER:-http://localhost:8080}
+      # Each site's LocalSettings.php reads these settings; keep secrets out of Git.
+      WG_SECRET_KEY: ${WG_SECRET_KEY:-}
+      WG_UPGRADE_KEY: ${WG_UPGRADE_KEY:-}
       WG_DB_TYPE: ${WG_DB_TYPE:-mysql}
       WG_DB_SERVER: ${WG_DB_SERVER:-database}
-      MYSQL_PORT: ${MYSQL_PORT:-3306}
+      MYSQL_PORT: 3306
       WG_DB_NAME: ${WG_DB_NAME:-mediawiki}
-      WG_DB_USER: ${WG_DB_USER:-root}
-      WG_DB_PASSWORD: ${WG_DB_PASSWORD:-root}
+      WG_DB_USER: ${WG_DB_USER:-wikiuser}
+      WG_DB_PASSWORD: ${WG_DB_PASSWORD:-mediawiki}
       WG_MEMCACHED_SERVER: ${WG_MEMCACHED_SERVER:-memcached:11211}
-      WG_SMTP_HOST: ${WG_SMTP_HOST:-mailhog}
-      WG_SMTP_IDHOST: ${WG_SMTP_IDHOST:-mailhog}
+      WG_SMTP_HOST: ${WG_SMTP_HOST:-mailpit}
+      WG_SMTP_IDHOST: ${WG_SMTP_IDHOST:-mailpit}
       WG_SMTP_LOCALHOST: ${WG_SMTP_LOCALHOST:-}
       WG_SMTP_PORT: ${WG_SMTP_PORT:-1025}
       WG_SMTP_USERNAME: ${WG_SMTP_USERNAME:-}
       WG_SMTP_PASSWORD: ${WG_SMTP_PASSWORD:-}
       WG_SMTP_AUTH: ${WG_SMTP_AUTH:-0}
     volumes:
+      # Initialize an empty source volume; never auto-upgrade persisted source files.
       - ./volumes/mediawiki:/var/www/mediawiki
-      - ~/.composer:/var/www/.composer/
-      - ./volumes/src:/var/www/src
+      # Site-specific configuration belongs to MapaMovSaúde or WikiFavelas.
+      - ./volumes/src:/var/www/src:ro
+      - composer-cache:/var/www/.composer
+
   database:
-    image: mariadb:${MARIADB_VERSION:-11.3.2}
+    # renovate: datasource=docker depName=mariadb
+    image: mariadb:${MARIADB_VERSION:-11.8.9}
     restart: unless-stopped
     ports:
-      - ${MYSQL_PORT:-3306}:3306
+      # Local SQL access only; production removes ports and may use an external DB.
+      - "${MYSQL_BIND_IP:-127.0.0.1}:${MYSQL_PORT:-13306}:3306"
     environment:
-      MYSQL_DATABASE: ${MYSQL_DATABASE:-mediawiki}
-      MYSQL_USER: ${MYSQL_USER:-wikiuser}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-mediawiki}
+      # Use the same WG_DB_* credentials as MediaWiki.
+      MYSQL_DATABASE: ${WG_DB_NAME:-mediawiki}
+      MYSQL_USER: ${WG_DB_USER:-wikiuser}
+      MYSQL_PASSWORD: ${WG_DB_PASSWORD:-mediawiki}
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root}
-      TZ: ${TZ:-CET}
+      TZ: ${TZ:-UTC}
     volumes:
-      - ./volumes/mysql/dump:/docker-entrypoint-initdb.d
+      - ./volumes/mysql/dump:/docker-entrypoint-initdb.d:ro
       - ./volumes/mysql/data:/var/lib/mysql
     command: --max_allowed_packet=32505856
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 40s
+
   memcached:
-    image: memcached:1.6-alpine
+    # Renovate proposes image updates by PR.
+    image: memcached:1.6.45-alpine
     restart: unless-stopped
-  mailhog:
-    image: blueimp/mailhog
+
+  mailpit:
+    # Development-only mail catcher; disable via the production override.
+    image: axllent/mailpit:v1.32.0
+    restart: unless-stopped
     ports:
-      - ${MAILHOG_PORT:-8025}:8025
+      - "${MAILPIT_BIND_IP:-127.0.0.1}:${MAILPIT_PORT:-8025}:8025"
+    networks:
+      default:
+        # Legacy aliases for WG_SMTP_HOST=mailhog deployments.
+        aliases:
+          - mailhog
+
+volumes:
+  composer-cache:

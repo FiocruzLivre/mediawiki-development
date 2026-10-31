@@ -1,0 +1,25 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended"
+  ],
+  "dependencyDashboard": true,
+  "schedule": [
+    "before 8am on monday"
+  ],
+  "timezone": "America/Sao_Paulo",
+  "prConcurrentLimit": 5,
+  "automerge": false,
+  "customManagers": [
+    {
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^docker-compose\\.yml$/"
+      ],
+      "matchStrings": [
+        "# renovate: datasource=(?<datasource>docker) depName=(?<depName>[^\\s]+)\\s+[^\\n]+:\\s*\\$\\{[^}]+:-(?<currentValue>[^}]+)\\}"
+      ],
+      "versioningTemplate": "docker"
+    }
+  ]
+}
