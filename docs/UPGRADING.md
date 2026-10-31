@@ -1,32 +1,19 @@
-# Upgrading an existing MediaWiki installation
+# Atualização de uma instalação MediaWiki
 
-This guide applies to any deployment using this shared Docker development setup. A changed image tag alone does **not** upgrade an existing MediaWiki code volume.
+Trocar a tag da imagem Docker **não** atualiza automaticamente o código MediaWiki em um volume persistente.
 
-## Prepare and isolate
+1. **Inventarie** as versões do MediaWiki, PHP, banco, extensões e skins, além dos volumes, configurações e customizações.
+2. **Valide os backups existentes:** banco, uploads e configurações. Verifique uma restauração em ambiente isolado; não crie destinos improvisados.
+3. **Separe a homologação:** banco, volumes, portas e nome de projeto próprios, sem acesso de escrita aos dados de produção.
+4. **Atualize em homologação:** selecione a versão de código compatível, ajuste extensões e dependências fixadas, revise avisos de segurança e execute:
 
-1. Record the effective Compose configuration, application version, PHP runtime and enabled skins/extensions. Review custom code modifications and configuration separately.
-2. Make complete backups of the persistent database, application files and uploaded content. Verify that a backup can be read and at least one file can be restored. Capture a consistent database snapshot for rollback.
-3. Create a dedicated staging environment with its **own** volumes, database, project name and host ports. Never run a test migration against the production database.
-
-## Update the application in staging
-
-1. Change the base image version in the Compose configuration and use a **matching** MediaWiki source checkout in the staging application volume.
-2. Update and validate every installed extension and skin against the target MediaWiki core. Check Composer security advisories; do not bypass known vulnerabilities to make an outdated dependency resolve.
-3. Rebuild the image and start the isolated stack:
-   ```bash
+   ```sh
    docker compose build mediawiki
    docker compose up -d
-   ```
-4. After confirming source and extensions are compatible, explicitly run the schema update:
-   ```bash
    docker compose exec mediawiki php maintenance/run.php update
    ```
-5. Exercise login, permissions, edits, previews, uploads, special pages, jobs, search, any installed extensions, and email delivery. Review service logs and health checks.
 
-## Production change and rollback
+5. **Teste os fluxos reais:** login, permissões, edição visual e de código, upload e miniaturas, formulários, mapas, busca, tarefas e e-mails, quando instalados. Confira logs e desempenho; HTTP 200 isoladamente não comprova compatibilidade.
+6. **Publique com autorização:** janela de manutenção, bloqueio controlado de escritas, backup final no mecanismo habitual, release reproduzível e testes funcionais após a atualização.
 
-Schedule a maintenance window, freeze writes, create a final verified backup, and only then deploy the tested configuration/source and migrate its database. Verify functionality before restoring normal traffic.
-
-A database schema upgrade may not be reversible by restoring the old container. The rollback plan must include restoring the **matching database snapshot, application files and configuration**.
-
-Never place production credentials, backups, or instance-specific configuration in this general-purpose repository.
+Uma atualização do esquema do banco pode exigir **restaurar o banco, código e configuração da versão anterior** para reverter. Trocar apenas a imagem do contêiner não é uma estratégia de reversão suficiente.

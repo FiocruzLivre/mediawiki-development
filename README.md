@@ -1,29 +1,28 @@
-# MediaWiki development environment
+# Ambiente de desenvolvimento MediaWiki
 
-A reusable Docker Compose environment for developing and testing MediaWiki.
+Ambiente Docker Compose reutilizável para desenvolvimento e testes de projetos MediaWiki. As configurações de cada wiki ficam nos repositórios próprios, não aqui.
 
-## Quick start
+## Iniciar
 
-```bash
+```sh
 git clone https://github.com/FiocruzLivre/mediawiki-development.git
 cd mediawiki-development
 docker compose up -d
 ```
 
-Open [MediaWiki](http://localhost:8080) and complete its installation wizard on the first run. The database and required services start automatically. Test emails appear at [Mailpit](http://localhost:8025).
+Acesse o [MediaWiki](http://localhost:8080) e conclua a instalação inicial. Os e-mails de teste ficam no [Mailpit](http://localhost:8025).
 
-To customize the local address, database credentials or debugging, put overrides in an untracked `.env`. The available variables, defaults and their purposes are documented next to the corresponding settings in [docker-compose.yml](docker-compose.yml). The default credentials and loopback-only port bindings are intended **only for local development**, not public deployments.
+O código do MediaWiki, os uploads e os dados ficam em `volumes/`. Para usar código existente, coloque-o em `volumes/mediawiki` **antes** de iniciar. Arquivos específicos do projeto podem ser montados em `volumes/src/mediawiki`.
 
-Application source code, data and uploads persist under `volumes/`. To work with existing source code, put it under `volumes/mediawiki` **before** starting the stack. Optional project-specific files can be supplied under `volumes/src/mediawiki`.
+Configure alterações de portas, credenciais locais e depuração por meio de um `.env` não versionado. As variáveis e os valores padrão estão em [docker-compose.yml](docker-compose.yml). **Os valores padrão não são adequados à produção.**
 
-## Useful commands
+## Comandos úteis
 
-```bash
+```sh
 docker compose logs -f mediawiki
-docker compose exec mediawiki php maintenance/run.php update
 docker compose down
 ```
 
-The update command is for an **explicitly planned schema migration**, not for a fresh installation. See [upgrading an existing installation](docs/UPGRADING.md) before changing the application version. The container checks the existing source version and refuses mismatches rather than modifying it automatically.
+Para ativar o Xdebug, defina `ENABLE_XDEBUG=1` e `XDEBUG_MODE=debug` no `.env` e reconstrua a imagem.
 
-For local Xdebug, explicitly set `ENABLE_XDEBUG=1` and `XDEBUG_MODE=debug` in `.env`, rebuild the image and use an Xdebug trigger when debugging a request.
+Antes de alterar versões ou executar a atualização do banco, siga [Atualização de instalações](docs/UPGRADING.md).
