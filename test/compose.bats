@@ -3,7 +3,17 @@
 setup() {
   root="$(cd "$BATS_TEST_DIRNAME/.." && pwd)"
   compose="$root/docker-compose.yml"
-  external="$root/docker-compose.override.example.yml"
+  temporary_dir="$(mktemp -d)"
+  external="$temporary_dir/docker-compose.override.yml"
+
+  # Test the documented deployment example without versioning a Compose override.
+  awk '/^```yaml$/,/^```$/ { if ($0 !~ /^```/) print }' \
+    "$root/docs/deployment.md" > "$external"
+  [ -s "$external" ]
+}
+
+teardown() {
+  rm -rf "$temporary_dir"
 }
 
 @test "local Compose configuration is valid without site-specific files" {

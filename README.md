@@ -12,7 +12,7 @@ Instalação nova: abra http://localhost:8080 para configurar o MediaWiki; mensa
 
 ## Instalação atrás de proxy ou com banco externo
 
-Copie `docker-compose.override.example.yml` para `docker-compose.override.yml` (ignorado pelo Git) e configure no `.env` as variáveis exigidas. O exemplo **não** publica portas, não inicia MariaDB ou Mailpit e desativa Xdebug. Conecte o serviço MediaWiki à rede do proxy e do banco externo conforme a instalação. Confira o resultado de `docker compose config` e de `docker compose config --services` antes de subir os contêineres. Não copie os valores de senha de desenvolvimento para produção.
+Consulte o [guia de implantação](docs/deployment.md) para criar o `docker-compose.override.yml` privado, configurar banco externo e proxy reverso e desativar serviços locais. Confira o Compose resultante antes de iniciar os contêineres. Nunca use credenciais de desenvolvimento em produção.
 
 ## Atualizações
 
