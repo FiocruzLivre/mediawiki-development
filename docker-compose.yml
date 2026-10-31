@@ -30,7 +30,6 @@ services:
       WG_UPGRADE_KEY: ${WG_UPGRADE_KEY:-}
       WG_DB_TYPE: ${WG_DB_TYPE:-mysql}
       WG_DB_SERVER: ${WG_DB_SERVER:-database}
-      WG_DB_PORT: ${WG_DB_PORT:-3306}
       MYSQL_PORT: 3306
       WG_DB_NAME: ${WG_DB_NAME:-mediawiki}
       WG_DB_USER: ${WG_DB_USER:-wikiuser}

@@ -31,16 +31,6 @@ if ( $timeout === false ) {
     exit( 1 );
 }
 
-$port = filter_var(
-    getenv( 'WG_DB_PORT' ) ?: ( getenv( 'MYSQL_PORT' ) ?: '3306' ),
-    FILTER_VALIDATE_INT,
-    [ 'options' => [ 'min_range' => 1, 'max_range' => 65535 ] ]
-);
-if ( $port === false ) {
-    fwrite( STDERR, "Invalid MySQL port\n" );
-    exit( 1 );
-}
-
 mysqli_report( MYSQLI_REPORT_OFF );
 $deadline = microtime( true ) + $timeout;
 fwrite( STDOUT, "Waiting for MySQL database connection...\n" );
@@ -48,7 +38,7 @@ fwrite( STDOUT, "Waiting for MySQL database connection...\n" );
 do {
     $connection = mysqli_init();
     $connection->options( MYSQLI_OPT_CONNECT_TIMEOUT, 2 );
-    $ready = @$connection->real_connect( $host, $user, $password, $name, $port );
+    $ready = @$connection->real_connect( $host, $user, $password, $name );
     if ( $ready ) {
         $connection->close();
         fwrite( STDOUT, "MySQL database connection ready\n" );
