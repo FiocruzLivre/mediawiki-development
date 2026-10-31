@@ -91,6 +91,21 @@ prepare() {
   [ "$(cat "$tmp/wiki/Z.php")" = "protected file" ]
 }
 
+@test "a symlinked site manifest keeps its original link across restarts" {
+  mkdir -p "$tmp/src/dependencies"
+  echo '{"require":{}}' > "$tmp/src/dependencies/composer.json"
+  ln -s ../dependencies/composer.json "$tmp/src/mediawiki/composer.local.json"
+  prepare
+
+  link="../src/mediawiki/composer.local.json"
+  [ "$(readlink "$tmp/wiki/composer.local.json")" = "$link" ]
+  [ "$(cat "$tmp/wiki/composer.local.json")" = '{"require":{}}' ]
+
+  run prepare
+  [ "$status" -eq 0 ]
+  [ "$(readlink "$tmp/wiki/composer.local.json")" = "$link" ]
+}
+
 @test "matching configuration links remain unchanged on repeated startup" {
   echo "site" > "$tmp/src/mediawiki/LocalSettings.php"
   prepare
