@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-source_dir="${1:?Informe o diretório de origem do MediaWiki}"
-wiki_dir="${2:?Informe o diretório persistente}"
-config_dir="${3:?Informe o diretório da configuração}"
-image_version="${4:?Informe a versão esperada}"
+source_dir="${1:?Missing MediaWiki source directory}"
+wiki_dir="${2:?Missing persistent wiki directory}"
+config_dir="${3:?Missing site configuration directory}"
+image_version="${4:?Missing expected MediaWiki version}"
 
 version_of() {
     local defines="$1/includes/Defines.php"

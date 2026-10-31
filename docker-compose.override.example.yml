@@ -1,5 +1,5 @@
-# Copie para docker-compose.override.yml somente nas instalações sem banco local.
-# MediaWiki fica disponível na rede Docker para o proxy reverso, sem porta pública.
+# Copy to docker-compose.override.yml for deployments with an external database.
+# The reverse proxy reaches MediaWiki through Docker networking, not a published port.
 services:
   mediawiki:
     ports: !reset []
@@ -9,17 +9,17 @@ services:
         ENABLE_XDEBUG: "0"
     environment:
       XDEBUG_MODE: "off"
-      WG_SERVER: ${WG_SERVER:?Defina WG_SERVER no .env}
-      WG_DB_SERVER: ${WG_DB_SERVER:?Defina WG_DB_SERVER no .env}
-      WG_DB_NAME: ${WG_DB_NAME:?Defina WG_DB_NAME no .env}
-      WG_DB_USER: ${WG_DB_USER:?Defina WG_DB_USER no .env}
-      WG_DB_PASSWORD: ${WG_DB_PASSWORD:?Defina WG_DB_PASSWORD no .env}
+      WG_SERVER: ${WG_SERVER:?Set WG_SERVER in .env}
+      WG_DB_SERVER: ${WG_DB_SERVER:?Set WG_DB_SERVER in .env}
+      WG_DB_NAME: ${WG_DB_NAME:?Set WG_DB_NAME in .env}
+      WG_DB_USER: ${WG_DB_USER:?Set WG_DB_USER in .env}
+      WG_DB_PASSWORD: ${WG_DB_PASSWORD:?Set WG_DB_PASSWORD in .env}
       WG_SMTP_HOST: ${WG_SMTP_HOST:-}
 
   database:
-    profiles: [somente-local]
+    profiles: [local-only]
     ports: !reset []
 
   mailpit:
-    profiles: [somente-local]
+    profiles: [local-only]
     ports: !reset []

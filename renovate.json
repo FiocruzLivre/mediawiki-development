@@ -10,9 +10,6 @@
   "timezone": "America/Sao_Paulo",
   "prConcurrentLimit": 5,
   "automerge": false,
-  "composer": {
-    "managerFilePatterns": ["/(^|\\/)composer-security\\.json$/"]
-  },
   "customManagers": [
     {
       "customType": "regex",

@@ -1,4 +1,4 @@
-name: Publicar imagem MediaWiki no GHCR
+name: Publish MediaWiki image to GHCR
 
 on:
   push:
@@ -25,7 +25,7 @@ jobs:
         with:
           persist-credentials: false
           fetch-depth: 0
-      - name: Verificar versão, tag e proveniência
+      - name: Verify release tag, MediaWiki version and main branch ancestry
         id: version
         env:
           RELEASE_TAG: ${{ github.ref_name }}

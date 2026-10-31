@@ -3,29 +3,29 @@ services:
     build:
       context: .docker/mediawiki
       args:
-        # Versões de build: o Renovate propõe atualizações; volumes existentes não migram sozinhos.
+        # Renovate updates image versions by PR; persistent source volumes are not upgraded.
         # renovate: datasource=docker depName=mediawiki
         MEDIAWIKI_VERSION: ${MEDIAWIKI_VERSION:-1.46.2}
         # renovate: datasource=docker depName=php
         PHP_RUNTIME_VERSION: ${PHP_RUNTIME_VERSION:-8.5.12-apache-trixie}
-        # Habilite somente em ambiente local; produção usa ENABLE_XDEBUG=0.
+        # Enable the debugger locally only; production uses ENABLE_XDEBUG=0.
         ENABLE_XDEBUG: ${ENABLE_XDEBUG:-0}
     restart: unless-stopped
     depends_on:
       database:
         condition: service_healthy
     ports:
-      # Porta publicada somente no host local; em produção remova com ports: !reset [] no override.
+      # Listen on loopback; production removes published ports through an override.
       - "${HTTP_BIND_IP:-127.0.0.1}:${HTTP_PORT:-8080}:80"
     environment:
-      # UID/GID para arquivos locais; ajuste no .env conforme o usuário do host.
+      # Local file ownership; set UID/GID for the host account in .env.
       HOST_UID: ${HOST_UID:-1000}
       HOST_GID: ${HOST_GID:-1000}
       XDEBUG_MODE: ${XDEBUG_MODE:-off}
       XDEBUG_CONFIG: ${XDEBUG_CONFIG:-client_host=host.docker.internal client_port=9003}
       TZ: ${TZ:-UTC}
       WG_SERVER: ${WG_SERVER:-http://localhost:8080}
-      # Variáveis lidas pelo LocalSettings.php de cada wiki; segredos ficam no .env (não versionado).
+      # Each site's LocalSettings.php reads these settings; keep secrets out of Git.
       WG_SECRET_KEY: ${WG_SECRET_KEY:-}
       WG_UPGRADE_KEY: ${WG_UPGRADE_KEY:-}
       WG_DB_TYPE: ${WG_DB_TYPE:-mysql}
@@ -43,9 +43,9 @@ services:
       WG_SMTP_PASSWORD: ${WG_SMTP_PASSWORD:-}
       WG_SMTP_AUTH: ${WG_SMTP_AUTH:-0}
     volumes:
-      # Código persistente: inicializa vazio, mas NÃO atualiza nem migra fontes existentes.
+      # Initialize an empty source volume; never auto-upgrade persisted source files.
       - ./volumes/mediawiki:/var/www/mediawiki
-      # Configuração específica do MapaMovSaúde ou da WikiFavelas.
+      # Site-specific configuration belongs to MapaMovSaúde or WikiFavelas.
       - ./volumes/src:/var/www/src:ro
       - composer-cache:/var/www/.composer
 
@@ -54,10 +54,10 @@ services:
     image: mariadb:${MARIADB_VERSION:-11.8.9}
     restart: unless-stopped
     ports:
-      # Acesso SQL local; remova ports e desative o serviço se o banco for externo.
+      # Local SQL access only; production removes ports and may use an external DB.
       - "${MYSQL_BIND_IP:-127.0.0.1}:${MYSQL_PORT:-13306}:3306"
     environment:
-      # Mesmas credenciais WG_DB_* do MediaWiki; sobrescreva no .env.
+      # Use the same WG_DB_* credentials as MediaWiki.
       MYSQL_DATABASE: ${WG_DB_NAME:-mediawiki}
       MYSQL_USER: ${WG_DB_USER:-wikiuser}
       MYSQL_PASSWORD: ${WG_DB_PASSWORD:-mediawiki}
@@ -75,19 +75,19 @@ services:
       start_period: 40s
 
   memcached:
-    # A imagem é atualizada por PRs do Renovate.
+    # Renovate proposes image updates by PR.
     image: memcached:1.6.45-alpine
     restart: unless-stopped
 
   mailpit:
-    # Caixa de e-mails apenas para desenvolvimento; desative em produção via override.
+    # Development-only mail catcher; disable via the production override.
     image: axllent/mailpit:v1.32.0
     restart: unless-stopped
     ports:
       - "${MAILPIT_BIND_IP:-127.0.0.1}:${MAILPIT_PORT:-8025}:8025"
     networks:
       default:
-        # Compatibilidade com instalações que ainda usam WG_SMTP_HOST=mailhog.
+        # Legacy aliases for WG_SMTP_HOST=mailhog deployments.
         aliases:
           - mailhog
 
