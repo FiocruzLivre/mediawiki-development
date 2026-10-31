@@ -53,6 +53,25 @@ setup() {
   [ "$before" = "$after" ]
 }
 
+@test "usuário web assume UID e GID configurados, sem tornar o volume privilegiado" {
+  expected_uid="$(docker compose config --format json | jq -r '.services.mediawiki.environment.HOST_UID')"
+  expected_gid="$(docker compose config --format json | jq -r '.services.mediawiki.environment.HOST_GID')"
+  run docker compose exec -T mediawiki id -u www-data
+  [ "$status" -eq 0 ]
+  [ "$output" = "$expected_uid" ]
+  run docker compose exec -T mediawiki id -g www-data
+  [ "$status" -eq 0 ]
+  [ "$output" = "$expected_gid" ]
+}
+
+@test "entrypoint recusa UID privilegiado antes de iniciar o servidor" {
+  image="$(docker compose images -q mediawiki)"
+  [ -n "$image" ]
+  run docker run --rm --network none -e HOST_UID=0 "$image"
+  [ "$status" -ne 0 ]
+  [[ "$output" == *"numeric and unprivileged"* ]]
+}
+
 @test "banco local atinge o estado saudável" {
   run docker compose exec -T database healthcheck.sh --connect --innodb_initialized
   [ "$status" -eq 0 ]
