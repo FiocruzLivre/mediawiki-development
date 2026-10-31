@@ -43,7 +43,7 @@ if [[ -d "$config_dir" ]]; then
     shopt -s nullglob
     for source in "$config_dir"/*; do
         target="$wiki_dir/${source##*/}"
-        expected="$(realpath --relative-to="$wiki_dir" "$source")"
+        expected="$(realpath --strip --relative-to="$wiki_dir" "$source")"
         if [[ -L "$target" && "$(readlink "$target")" = "$expected" ]]; then
             continue
         fi
@@ -66,7 +66,7 @@ fi
 if [[ -d "$config_dir" ]]; then
     for source in "$config_dir"/*; do
         target="$wiki_dir/${source##*/}"
-        expected="$(realpath --relative-to="$wiki_dir" "$source")"
+        expected="$(realpath --strip --relative-to="$wiki_dir" "$source")"
         [[ -L "$target" ]] || ln -s "$expected" "$target"
     done
 fi
