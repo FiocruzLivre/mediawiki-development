@@ -1,28 +1,21 @@
-# Ambiente de desenvolvimento MediaWiki
+# Imagem MediaWiki compartilhada
 
-Ambiente Docker Compose reutilizável para desenvolvimento e testes de projetos MediaWiki. As configurações de cada wiki ficam nos repositórios próprios, não aqui.
+Imagem e Docker Compose utilizados no desenvolvimento, na homologação e na produção do [MapaMovSaúde](https://github.com/FiocruzLivre/mapa-mov-saude) e da [WikiFavelas](https://github.com/FiocruzLivre/wikifavelas-mediawiki). Configurações, extensões e dados de cada wiki ficam em seus próprios repositórios e servidores.
 
-## Iniciar
-
-```sh
-git clone https://github.com/FiocruzLivre/mediawiki-development.git
-cd mediawiki-development
-docker compose up -d
-```
-
-Acesse o [MediaWiki](http://localhost:8080) e conclua a instalação inicial. Os e-mails de teste ficam no [Mailpit](http://localhost:8025).
-
-O código do MediaWiki, os uploads e os dados ficam em `volumes/`. Para usar código existente, coloque-o em `volumes/mediawiki` **antes** de iniciar. Arquivos específicos do projeto podem ser montados em `volumes/src/mediawiki`.
-
-Configure alterações de portas, credenciais locais e depuração por meio de um `.env` não versionado. As variáveis e os valores padrão estão em [docker-compose.yml](docker-compose.yml). **Os valores padrão não são adequados à produção.**
-
-## Comandos úteis
+## Uso local
 
 ```sh
-docker compose logs -f mediawiki
-docker compose down
+docker compose up -d --build
 ```
 
-Para ativar o Xdebug, defina `ENABLE_XDEBUG=1` e `XDEBUG_MODE=debug` no `.env` e reconstrua a imagem.
+Instalação nova: abra http://localhost:8080 para configurar o MediaWiki; mensagens de teste em http://localhost:8025. O código fica em `volumes/mediawiki`, enquanto a configuração da wiki pode ser montada em `volumes/src/mediawiki`. Os valores locais estão no [Compose](docker-compose.yml); coloque alterações e segredos apenas no `.env` não versionado.
 
-Antes de alterar versões ou executar a atualização do banco, siga [Atualização de instalações](docs/UPGRADING.md).
+## Instalação atrás de proxy ou com banco externo
+
+Copie `docker-compose.override.example.yml` para `docker-compose.override.yml` (ignorado pelo Git) e configure no `.env` as variáveis exigidas. O exemplo **não** publica portas, não inicia MariaDB ou Mailpit e desativa Xdebug. Conecte o serviço MediaWiki à rede do proxy e do banco externo conforme a instalação. Confira o resultado de `docker compose config` e de `docker compose config --services` antes de subir os contêineres. Não copie os valores de senha de desenvolvimento para produção.
+
+## Atualizações
+
+O [Renovate](renovate.json) deve propor PRs para as versões do MediaWiki, PHP, Composer e imagens auxiliares após ser habilitado no GitHub. Ele **não** faz merge nem deploy automático. Versões explícitas são necessárias para testar e reproduzir cada release.
+
+**Atenção:** a imagem só copia o código MediaWiki para `volumes/mediawiki` quando o volume está vazio. Atualizar a imagem **não atualiza** o código ou dependências de um volume já existente. Em produção, revise as diferenças e as versões de extensões, valide backup/restauração, atualize uma cópia isolada, execute `php maintenance/run.php update` quando necessário e só então promova o release validado. Planeje reversão de banco, arquivos e código juntos.
