@@ -11,6 +11,7 @@ ENV MEDIAWIKI_IMAGE_VERSION=${MEDIAWIKI_VERSION}
 COPY --from=mediawiki-source --chown=root:root /var/www/html/ /var/www/html/
 COPY --from=ghcr.io/mlocati/php-extension-installer:2.12.3 /usr/bin/install-php-extensions /usr/local/bin/
 COPY --from=composer:2.10.3 /usr/bin/composer /usr/local/bin/composer
+COPY composer-security.json /tmp/mediawiki-composer-security.json
 
 RUN set -eux; \
     apt-get update; \
@@ -34,11 +35,11 @@ RUN set -eux; \
     sed -i 's#DocumentRoot /var/www/html#DocumentRoot /var/www/mediawiki#' \
         /etc/apache2/sites-available/000-default.conf
 
-# A imagem oficial 1.46 fixa symfony/yaml vulnerável: liberar patches
-# compatíveis da série 7.4 e rejeitar dependências com avisos de segurança.
+# Overrides temporários estão no manifesto Composer e passam pela auditoria.
 RUN set -eux; \
     cd /var/www/html; \
-    COMPOSER_ALLOW_SUPERUSER=1 composer require 'symfony/yaml:^7.4' \
+    requirement="$(php -r '$r=json_decode(file_get_contents("/tmp/mediawiki-composer-security.json"),true,512,JSON_THROW_ON_ERROR);foreach ($r["require"] as $name=>$range) echo "$name:$range";')"; \
+    COMPOSER_ALLOW_SUPERUSER=1 composer require "$requirement" \
         --no-update --no-plugins --no-scripts --no-interaction; \
     COMPOSER_ALLOW_SUPERUSER=1 composer update \
         --no-dev --no-plugins --no-scripts --no-interaction --no-progress; \

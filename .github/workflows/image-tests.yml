@@ -1,0 +1,41 @@
+name: Testar imagem MediaWiki
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  configuration:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Instalar Bats, jq e rsync
+        run: sudo apt-get update -qq && sudo apt-get install -y bats jq rsync
+      - name: Validar contratos de ambiente, bootstrap e tags
+        run: bats test/compose.bats test/bootstrap.bats test/release-tag.bats
+
+  integration:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Instalar Bats e jq
+        run: sudo apt-get update -qq && sudo apt-get install -y bats jq
+      - name: Construir e iniciar ambiente descartável
+        run: docker compose up -d --build
+      - name: Validar imagem, Composer e preservação do volume
+        run: bats test/image-integration.bats
+      - name: Logs em caso de falha
+        if: failure()
+        run: docker compose logs --tail=100
+      - name: Descartar ambiente de integração
+        if: always()
+        run: docker compose down -v --remove-orphans

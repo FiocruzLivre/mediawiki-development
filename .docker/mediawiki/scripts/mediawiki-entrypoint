@@ -1,15 +1,12 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-source_dir=/var/www/html
-wiki_dir=/var/www/mediawiki
-
-# Match the host user only inside this development container.
+# Host mapping changes the container's user, not ownership of existing wiki data.
 for value in "${HOST_UID:-1000}" "${HOST_GID:-1000}"; do
-    if [[ ! "$value" =~ ^[0-9]+$ ]] || (( value < 100 )); then
-        echo "HOST_UID and HOST_GID must be unprivileged numeric IDs." >&2
+    [[ "$value" =~ ^[0-9]+$ ]] && (( 10#$value >= 100 )) || {
+        echo "HOST_UID and HOST_GID must be numeric and unprivileged" >&2
         exit 1
-    fi
+    }
 done
 if [[ "$(id -g www-data)" != "${HOST_GID:-1000}" ]]; then
     groupmod --non-unique --gid "${HOST_GID:-1000}" www-data
@@ -17,63 +14,12 @@ fi
 if [[ "$(id -u www-data)" != "${HOST_UID:-1000}" ]]; then
     usermod --non-unique --uid "${HOST_UID:-1000}" www-data
 fi
-# Composer's named cache volume is created with root ownership on first use.
 if [[ -d /var/www/.composer ]]; then
     chown www-data:www-data /var/www/.composer
 fi
 
-if [[ ! -f "$wiki_dir/index.php" ]]; then
-    # Do not overwrite a partially initialized or incorrectly mounted application.
-    if [[ -n "$(find "$wiki_dir" -mindepth 1 -maxdepth 1 -print -quit)" ]]; then
-        echo "The wiki volume contains files but no index.php. Refusing to overwrite it." >&2
-        exit 1
-    fi
-    echo "Initializing a new MediaWiki development volume from the image..."
-    rsync -a -- "$source_dir/" "$wiki_dir/"
-    chown -R www-data:www-data "$wiki_dir"
-fi
+/usr/local/bin/mediawiki-prepare \
+    /var/www/html /var/www/mediawiki /var/www/src/mediawiki \
+    "$MEDIAWIKI_IMAGE_VERSION"
 
-version_file="$wiki_dir/includes/Defines.php"
-if [[ ! -f "$version_file" ]]; then
-    echo "Invalid MediaWiki source volume (missing includes/Defines.php)." >&2
-    exit 1
-fi
-
-# An image update must never implicitly replace or migrate a persistent source tree.
-source_version="$(sed -nE "s/.*define\( 'MW_VERSION', '([^']+)' \).*/\1/p" "$version_file" | head -n 1)"
-if [[ -z "$source_version" || "$source_version" != "$MEDIAWIKI_IMAGE_VERSION" ]]; then
-    echo "MediaWiki source version '${source_version:-unknown}' differs from image version '$MEDIAWIKI_IMAGE_VERSION'." >&2
-    echo "Review the source tree, extensions and database migration before updating; no files were changed." >&2
-    exit 1
-fi
-
-# The upstream source directory may have sticky world-writable permissions.
-# Linux protected_symlinks then blocks Apache from following LocalSettings.php
-# symlinks, even when the linked file itself is readable.
-# Normalize this top-level directory only; never recurse on each startup.
-if [[ -k "$wiki_dir" ]]; then
-    chmod 0755 "$wiki_dir"
-fi
-
-# Link only non-conflicting optional project settings. Never delete upstream files.
-if [[ -d /var/www/src/mediawiki ]]; then
-    shopt -s nullglob
-    for source in /var/www/src/mediawiki/*; do
-        target="$wiki_dir/${source##*/}"
-        if [[ -L "$target" ]]; then
-            if [[ "$(readlink "$target")" == "../src/mediawiki/${source##*/}" ]]; then
-                continue
-            fi
-            echo "Unexpected symlink at '$target'; refusing to overwrite it." >&2
-            exit 1
-        fi
-        if [[ -e "$target" ]]; then
-            echo "Override conflict at '$target'; refusing to remove existing files." >&2
-            exit 1
-        fi
-        ln -s "../src/mediawiki/${source##*/}" "$target"
-    done
-fi
-
-# A fresh volume is owned by www-data. Do not chown every file on every boot.
 exec apache2-foreground

@@ -16,6 +16,8 @@ Copie `docker-compose.override.example.yml` para `docker-compose.override.yml` (
 
 ## Atualizações
 
-O [Renovate](renovate.json) deve propor PRs para as versões do MediaWiki, PHP, Composer e imagens auxiliares após ser habilitado no GitHub. Ele **não** faz merge nem deploy automático. Versões explícitas são necessárias para testar e reproduzir cada release.
+O [Renovate](renovate.json) propõe PRs de versões após sua habilitação no GitHub, sem merge ou deploy automático. O build mantém uma exceção transitória no manifesto [Composer](.docker/mediawiki/composer-security.json), pois o MediaWiki 1.46.2 fixa uma versão vulnerável do Symfony YAML. O `composer audit` bloqueia dependências com alertas de segurança; remova a exceção quando a distribuição oficial a corrigir.
+
+Para publicar no registry da organização, depois de revisar e integrar o PR, crie uma tag no branch `main` como `1.46.2-r1`. O workflow publica `ghcr.io/fiocruzlivre/mediawiki:1.46.2-r1` e uma tag imutável com o SHA, somente após os testes. A revisão `r2` representa outra compilação da **mesma versão MediaWiki**. Não é criado `latest` e não há implantação automática.
 
 **Atenção:** a imagem só copia o código MediaWiki para `volumes/mediawiki` quando o volume está vazio. Atualizar a imagem **não atualiza** o código ou dependências de um volume já existente. Em produção, revise as diferenças e as versões de extensões, valide backup/restauração, atualize uma cópia isolada, execute `php maintenance/run.php update` quando necessário e só então promova o release validado. Planeje reversão de banco, arquivos e código juntos.
