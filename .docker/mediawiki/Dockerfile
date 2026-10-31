@@ -40,9 +40,8 @@ RUN set -eux; \
     cd /var/www/html; \
     COMPOSER_ALLOW_SUPERUSER=1 composer require 'symfony/yaml:^7.4' \
         --no-update --no-plugins --no-scripts --no-interaction; \
-    COMPOSER_ALLOW_SUPERUSER=1 composer update symfony/yaml \
-        --no-dev --no-plugins --no-scripts --no-interaction --no-progress \
-        --with-all-dependencies --minimal-changes; \
+    COMPOSER_ALLOW_SUPERUSER=1 composer update \
+        --no-dev --no-plugins --no-scripts --no-interaction --no-progress; \
     COMPOSER_ALLOW_SUPERUSER=1 composer audit --locked --no-dev
 
 COPY scripts/ /usr/local/bin/
