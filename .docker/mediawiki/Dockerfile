@@ -7,6 +7,7 @@ FROM php:${PHP_RUNTIME_VERSION}
 ARG MEDIAWIKI_VERSION
 ARG ENABLE_XDEBUG=0
 ENV MEDIAWIKI_IMAGE_VERSION=${MEDIAWIKI_VERSION}
+LABEL org.opencontainers.image.source="https://github.com/FiocruzLivre/mediawiki-development"
 
 COPY --from=mediawiki-source --chown=root:root /var/www/html/ /var/www/html/
 COPY --from=ghcr.io/mlocati/php-extension-installer:2.12.3 /usr/bin/install-php-extensions /usr/local/bin/
