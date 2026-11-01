@@ -14,6 +14,10 @@ Instalação nova: abra http://localhost:8080 para configurar o MediaWiki; mensa
 
 Consulte o [guia de implantação](docs/deployment.md) para criar o `docker-compose.override.yml` privado, configurar banco externo e proxy reverso e desativar serviços locais. Confira o Compose resultante antes de iniciar os contêineres. Nunca use credenciais de desenvolvimento em produção.
 
+## Testes
+
+A organização e os requisitos de execução dos testes estão em [tests/README.md](tests/README.md).
+
 ## Atualizações
 
 O [Renovate](renovate.json) propõe PRs de versões após sua habilitação no GitHub, sem merge ou deploy automático. Como o MediaWiki 1.46.2 fixa o Symfony YAML em uma versão vulnerável, o build permite atualizações compatíveis na série 7.4 e executa `composer audit`. Essa exceção temporária deve ser retirada quando uma versão estável do MediaWiki incorporar a correção.

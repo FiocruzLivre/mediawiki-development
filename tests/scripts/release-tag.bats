@@ -1,7 +1,7 @@
 #!/usr/bin/env bats
 
 setup() {
-  root="$(cd "$BATS_TEST_DIRNAME/.." && pwd)"
+  root="$(cd "$BATS_TEST_DIRNAME/../.." && pwd)"
   script="$root/scripts/check-release-tag"
 }
 
