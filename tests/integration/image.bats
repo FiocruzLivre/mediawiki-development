@@ -1,7 +1,7 @@
 #!/usr/bin/env bats
 
 setup() {
-  cd "$(dirname "$BATS_TEST_FILENAME")/.."
+  cd "$(dirname "$BATS_TEST_FILENAME")/../.."
 }
 
 @test "the web server and development mail catcher respond" {

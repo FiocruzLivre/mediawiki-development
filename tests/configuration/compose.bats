@@ -1,7 +1,7 @@
 #!/usr/bin/env bats
 
 setup() {
-  root="$(cd "$BATS_TEST_DIRNAME/.." && pwd)"
+  root="$(cd "$BATS_TEST_DIRNAME/../.." && pwd)"
   compose="$root/docker-compose.yml"
   temporary_dir="$(mktemp -d)"
   external="$temporary_dir/docker-compose.override.yml"

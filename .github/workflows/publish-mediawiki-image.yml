@@ -34,13 +34,13 @@ jobs:
           echo "tag=$release" >> "$GITHUB_OUTPUT"
 
       - name: Test configuration, startup and release tag rules
-        run: bats test/compose.bats test/bootstrap.bats test/release-tag.bats
+        run: bats tests/configuration/*.bats tests/scripts/*.bats
 
       - name: Build and start the image to be published
         run: docker compose up -d --build
 
       - name: Test the built image and database recovery
-        run: bats test/image-integration.bats test/database-readiness.bats
+        run: bats tests/integration/*.bats
 
       - uses: docker/login-action@81c6f93d4bc991e510b342a00b419b3bb4efc5c6 # v4.7.0
         with:

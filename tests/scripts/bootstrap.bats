@@ -1,7 +1,7 @@
 #!/usr/bin/env bats
 
 setup() {
-  root="$(cd "$BATS_TEST_DIRNAME/.." && pwd)"
+  root="$(cd "$BATS_TEST_DIRNAME/../.." && pwd)"
   helper="$root/.docker/mediawiki/scripts/mediawiki-prepare"
   tmp="$(mktemp -d)"
   mkdir -p "$tmp/source/includes" "$tmp/wiki" "$tmp/src/mediawiki"
