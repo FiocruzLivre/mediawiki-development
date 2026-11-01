@@ -78,7 +78,7 @@ teardown() {
     WG_DB_NAME=production WG_DB_USER=wiki WG_DB_PASSWORD=test_pw \
     docker compose -f "$compose" -f "$external" config --services
   [ "$status" -eq 0 ]
-  [ "$output" = "$(printf 'mediawiki\nmemcached')" ]
+  [ "$(printf '%s\n' "$output" | sort)" = "$(printf 'mediawiki\nmemcached\n' | sort)" ]
 }
 
 @test "local deployment overrides remain ignored by Git" {
