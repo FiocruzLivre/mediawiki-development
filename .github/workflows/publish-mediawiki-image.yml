@@ -40,7 +40,7 @@ jobs:
         run: docker compose up -d --build
 
       - name: Test the built image and database recovery
-        run: bats test/image-integration.bats test/database-readiness.bats
+        run: bats test/image-integration.bats test/database-readiness.bats test/external-database.bats
 
       - uses: docker/login-action@81c6f93d4bc991e510b342a00b419b3bb4efc5c6 # v4.7.0
         with:
